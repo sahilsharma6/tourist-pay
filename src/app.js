@@ -34,6 +34,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
   "https://tourist-pay-gmaa.vercel.app",
+  "https://tourist-pay-gmaa.vercel.app/login",
 ];
 app.use(
   cors({
