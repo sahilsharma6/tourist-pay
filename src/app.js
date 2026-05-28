@@ -1,20 +1,20 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
-import mongoSanitize from 'express-mongo-sanitize';
-import xss from 'xss-clean';
-import rateLimit from 'express-rate-limit';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import express from "express";
+import dotenv from "dotenv";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import mongoSanitize from "express-mongo-sanitize";
+import xss from "xss-clean";
+import rateLimit from "express-rate-limit";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Import middlewares
-import { errorHandler, notFound } from './middlewares/errorHandler.js';
+import { errorHandler, notFound } from "./middlewares/errorHandler.js";
 
 // Import routes (to be created)
-import indexRoutes from './routes/index.js';
+import indexRoutes from "./routes/index.js";
 
 dotenv.config();
 
@@ -27,10 +27,12 @@ const app = express();
 app.use(helmet());
 
 // Cross-origin resource sharing
-app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
-  credentials: true
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    credentials: true,
+  }),
+);
 
 // Body parser
 app.use(express.json());
@@ -40,8 +42,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // Dev logging middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
 }
 
 // Data sanitization against NoSQL query injection
@@ -54,15 +56,15 @@ if (process.env.NODE_ENV === 'development') {
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 mins
   max: 100, // limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again later'
+  message: "Too many requests from this IP, please try again later",
 });
-app.use('/api', limiter);
+app.use("/api", limiter);
 
 // Set static folder for uploads
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // API Routes
-app.use('/api', indexRoutes);
+app.use("/api", indexRoutes);
 
 // Error Handling Middlewares
 app.use(notFound);
